@@ -13,10 +13,12 @@
     </form>
     <div id="player"></div>
     <script>
-    // Inizialize paratiijs
     var fileToUpload
     var resumableFile
     var player
+
+    // Inizialize ParatiiJS with a public publicaddress and a proper privateKey
+    // NB Use a proper wallet to manage publicaddress and privatekey
     var paratii = new paratiijs.Paratii({
       account: {
         address: '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275',
@@ -29,11 +31,15 @@
         fileToUpload = this.files[0];
     }, false);
 
-    //prevent default form submit
+
     document.getElementById('form').addEventListener("submit", function(evt) {
+        //prevent default form submit
         evt.preventDefault();
         if(fileToUpload){
+          //if a file is defined upload it and trancode
           resumableFile = paratii.ipfs.uploader.addAndTranscode(fileToUpload)
+
+          //listening for trasconding:done event
           resumableFile.on('transcoding:done', function(file, message){
             player = new Clappr.Player(
               {
