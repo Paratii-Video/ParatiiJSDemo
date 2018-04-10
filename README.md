@@ -19,8 +19,8 @@ Then:
 node server.js
 ```
 
-##Finally
+## Finally
 
-browse to
+browse to:
 
 localhost:8080/upload -> upload and playback using Clappr
