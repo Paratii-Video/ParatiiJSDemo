@@ -34,22 +34,14 @@
     //bind change event to input file
     document.getElementById('fileinput').addEventListener('change', function(){
         fileToUpload = this.files[0];
-
-        console.log("name : " + fileToUpload.name);
-        console.log("size : " + fileToUpload.size);
-        console.log("type : " + fileToUpload.type);
-        console.log("date : " + fileToUpload.lastModified);
     }, false);
 
     //prevent default form submit
     document.getElementById('form').addEventListener("submit", function(evt) {
         evt.preventDefault();
         if(fileToUpload){
-          console.log("upload!!!")
           resumableFile = paratii.ipfs.uploader.addAndTranscode(fileToUpload)
           resumableFile.on('transcoding:done', function(file, message){
-            console.log(file)
-            console.log(message.master.hash)
             player = new Clappr.Player(
               {
                 source: "https://gateway.paratii.video/ipfs/"+message.master.hash+"/master.m3u8",
