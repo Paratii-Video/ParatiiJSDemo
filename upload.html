@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script type="text/javascript" src="/static/paratii.min.js"></script>
+  </head>
+  <body>
+    <form id="form">
+      <input type="file" id="fileinput" multiple="multiple" />
+      <input type="submit" value="upload">
+    </form>
+    <div id="player"></div>
+    <script>
+    // Inizialize paratiijs
+    var fileToUpload
+    var resumableFile
+    var player
+    var paratii = new paratiijs.Paratii({
+      account: {
+        address: '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275',
+        privateKey: '399b141d0cc2b863b2f514ffe53edc6afc9416d5899da4d9bd2350074c38f1c6'
+      },
+      db: {
+        "provider": "https://db-staging.paratii.video/api/v1/"
+      },
+      "eth": {
+        "provider": "https://db-chain-staging.paratii.video",
+        "registryAddress": "0xaa4A9f5FB33aD7E1a1bA77Ee536977Dd0eFE7034"
+      }
+    })
+
+    //bind change event to input file
+    document.getElementById('fileinput').addEventListener('change', function(){
+        fileToUpload = this.files[0];
+
+        console.log("name : " + fileToUpload.name);
+        console.log("size : " + fileToUpload.size);
+        console.log("type : " + fileToUpload.type);
+        console.log("date : " + fileToUpload.lastModified);
+    }, false);
+
+    //prevent default form submit
+    document.getElementById('form').addEventListener("submit", function(evt) {
+        evt.preventDefault();
+        if(fileToUpload){
+          console.log("upload!!!")
+          resumableFile = paratii.ipfs.uploader.addAndTranscode(fileToUpload)
+          resumableFile.on('transcoding:done', function(file, message){
+            console.log(file)
+            console.log(message.master.hash)
+            player = new Clappr.Player(
+              {
+                source: "https://gateway.paratii.video/ipfs/"+message.master.hash+"/master.m3u8",
+                parentId: "#player",
+                mimeType: 'application/x-mpegURL'
+              }
+            );
+          });
+        } else {
+          alert("please select a file")
+        }
+    }, true);
+    </script>
+
+  </body>
+</html>

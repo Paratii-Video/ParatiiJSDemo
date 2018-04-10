@@ -9,4 +9,8 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 
+app.get('/upload', function(req, res) {
+    res.sendFile(path.join(__dirname + '/upload.html'));
+});
+
 app.listen(8080);
