@@ -19,6 +19,8 @@ Then:
 node server.js
 ```
 
-Finally:
+##Finally
 
-browse to localhost:8080 and look at the console and wait for Promise to be resolved
+browse to
+
+localhost:8080/upload -> upload and playback using Clappr
