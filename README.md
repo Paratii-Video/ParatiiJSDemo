@@ -1,6 +1,12 @@
 # ParatiiJSDemo
 A browser implementation demo for paratii.js
 
+At the moment it's just test
+
+`paratii.eth.vids.get`
+
+other examples will be implemented
+
 ## Installation
 
 First:
