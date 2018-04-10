@@ -1,7 +1,7 @@
 # ParatiiJSDemo
 A browser implementation demo for paratii.js
 
-At the moment it's just test
+At the moment just test
 
 `paratii.eth.vids.get`
 
