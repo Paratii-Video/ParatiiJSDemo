@@ -3,9 +3,21 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <script type="text/javascript" src="https://raw.githubusercontent.com/Paratii-Video/paratii-js/packForBrowser/dist/paratii.min.js"></script>
+    <script type="text/javascript" src="/node_modules/paratii-js/dist/paratii.min.js"></script>
   </head>
   <body>
+    <a href="/upload">
+      Upload & Playback samples
+    </a>
+    <a href="/feed">
+      User Feed Carousel & Playback samples
+    </a>
+    <a href="/contracts">
+      Play with contracts
+    </a>
+    <a href="/transcoderevents">
+      Play with transcoder events
+    </a>
 
     <script>
     var paratii = new paratiijs.Paratii({
@@ -21,8 +33,10 @@
         "registryAddress": "0xaa4A9f5FB33aD7E1a1bA77Ee536977Dd0eFE7034"
       }
     })
-    var video = paratii.eth.vids.get("pm2bRPEQ48EX")
-    console.log(video)
+    var video = paratii.vids.get("pm2bRPEQ48EX")
+    video.then(function(res){
+      console.log(res)
+    })
     </script>
 
   </body>

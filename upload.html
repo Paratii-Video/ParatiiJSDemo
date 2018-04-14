@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <title></title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-    <script type="text/javascript" src="/static/paratii.min.js"></script>
+    <script type="text/javascript" src="/node_modules/paratii-js/dist/paratii.min.js"></script>
   </head>
   <body>
+    <a href="/">
+      Home
+    </a>
     <form id="form">
       <input type="file" id="fileinput" multiple="multiple" />
       <input type="submit" value="upload">
@@ -18,7 +21,7 @@
     var player
 
     // Inizialize ParatiiJS with a public publicaddress and a proper privateKey
-    // NB Use a proper wallet to manage publicaddress and privatekey
+    // NB Account inizialized just for test, please use a proper wallet to manage publicaddress and privatekey
     var paratii = new paratiijs.Paratii({
       account: {
         address: '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275',
