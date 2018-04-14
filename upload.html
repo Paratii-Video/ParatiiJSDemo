@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title></title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-    <script type="text/javascript" src="/node_modules/paratii-js/dist/paratii.min.js"></script>
+    <!-- <script type="text/javascript" src="/node_modules/paratii-js/dist/paratii.min.js"></script> -->
+    <script type="text/javascript" src="/static/paratii.min.js"></script>
   </head>
   <body>
     <a href="/">
@@ -14,6 +15,28 @@
       <input type="file" id="fileinput" multiple="multiple" />
       <input type="submit" value="upload">
     </form>
+    <h1>EventEmitter events:</h1>
+    <ul>
+      <li>
+        <p>Uploader progress: <span id="uploaderProgress">none</span></p>
+      </li>
+      <li>
+        <p>Transcoding started: <span id="transcodingStarted">none</span></p>
+      </li>
+      <li>
+        <p>Transcoding progress: <span id="transcodingProgress">none</span></p>
+      </li>
+      <li>
+        <p>Transcoding error: <span id="transcodingError">none</span></p>
+      </li>
+      <li>
+        <p>Transcoding downsample ready: <span id="transcodingDownsampleReady">none</span></p>
+      </li>
+      <li>
+        <p>Transcoding done: <span id="transcodingDone">none</span></p>
+      </li>
+
+    </ul>
     <div id="player"></div>
     <script>
     var fileToUpload
@@ -26,6 +49,10 @@
       account: {
         address: '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275',
         privateKey: '399b141d0cc2b863b2f514ffe53edc6afc9416d5899da4d9bd2350074c38f1c6'
+      },
+      "eth": {
+        "provider": "https://newchain.paratii.video",
+        "registryAddress": "0x0d03db78f5D0a85B1aBB3eAcF77CECe27e6F623F"
       }
     })
 
@@ -40,13 +67,74 @@
         evt.preventDefault();
         if(fileToUpload){
           //if a file is defined upload it and trancode
-          resumableFile = paratii.ipfs.uploader.addAndTranscode(fileToUpload)
+          resumableFile = paratii.ipfs.addAndTranscode(fileToUpload)
 
           //listening for trasconding:done event
-          resumableFile.on('transcoding:done', function(file, message){
+          resumableFile.on('uploader:progress', function(hash, chunkSize, percent){
+            console.log('uploader:progress')
+
+            var uploaderProgress = document.getElementById("uploaderProgress")
+            uploaderProgress.innerHTML = ""
+            console.log(hash)
+            console.log(chunkSize)
+            console.log(percent)
+            uploaderProgress.innerHTML += "hash: "+hash
+            uploaderProgress.innerHTML += " chunkSize: "+chunkSize
+            uploaderProgress.innerHTML += " percent: "+percent
+          });
+
+          resumableFile.on('transcoding:started', function(hash, author){
+            console.log('transcoding:started')
+            var transcodingStarted = document.getElementById("transcodingStarted")
+            transcodingStarted.innerHTML = ""
+            console.log(hash)
+            console.log(author)
+            transcodingStarted.innerHTML += "hash: "+hash
+            transcodingStarted.innerHTML += " author: "+author
+          });
+          resumableFile.on('transcoding:progress', function(hash, size, percent){
+            console.log('transcoding:progress')
+            var transcodingProgress = document.getElementById("transcodingProgress")
+            transcodingProgress.innerHTML = ""
+
+            console.log(hash)
+            console.log(size)
+            console.log(percent)
+            transcodingProgress.innerHTML += "hash: "+hash
+            transcodingProgress.innerHTML += " size: "+size
+            transcodingProgress.innerHTML += " percent: "+percent
+          });
+          resumableFile.on('transcoding:error', function(err){
+            console.log('transcoding:error')
+            var transcodingError = document.getElementById("transcodingError")
+            transcodingError.innerHTML = ""
+            transcodingError.innerHTML += "error: "+err
+
+            console.log(err)
+          });
+          resumableFile.on('transcoding:downsample:ready', function(hash, size){
+            console.log('transcoding:downsample:ready')
+            var transcodingDownsampleReady = document.getElementById("transcodingDownsampleReady")
+            transcodingDownsampleReady.innerHTML = ""
+
+            console.log(hash)
+            console.log(size)
+            transcodingDownsampleReady.innerHTML += "hash: "+hash
+            transcodingDownsampleReady.innerHTML += " size: "+size
+          });
+          resumableFile.on('transcoding:done', function(hash, transcoderResult){
+            console.log('transcoding:done')
+
+
+            var transcodingDone = document.getElementById("transcodingDone")
+            transcodingDone.innerHTML = ""
+            console.log(hash)
+            console.log(transcoderResult)
+            transcodingDone.innerHTML += "hash: "+hash
+            transcodingDone.innerHTML += " master hash: "+transcoderResult.master.hash
             player = new Clappr.Player(
               {
-                source: "https://gateway.paratii.video/ipfs/"+message.master.hash+"/master.m3u8",
+                source: "https://gateway.paratii.video/ipfs/"+transcoderResult.master.hash+"/master.m3u8",
                 parentId: "#player",
                 mimeType: 'application/x-mpegURL'
               }
