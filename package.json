@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.16.3",
     "flickity": "^2.1.1",
-    "paratii-js": "^0.2.1"
+    "paratii-js": "^0.2.1",
+    "venobox": "^1.8.3"
   }
 }

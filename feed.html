@@ -4,11 +4,20 @@
     <meta charset="utf-8">
     <title></title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="/node_modules/paratii-js/dist/paratii.min.js"></script>
     <script type="text/javascript" src="/node_modules/flickity/dist/flickity.pkgd.min.js"></script>
+    <script type="text/javascript" src="/node_modules/venobox/venobox/venobox.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="/node_modules/flickity/dist/flickity.min.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/venobox/venobox/venobox.css">
+
     <style media="screen">
-      .video_carousel .videoItem{
+
+      #address{
+        width: 400px
+      }
+      .video_carousel .videoItem {
         width: 30%; /* full width */
         height: 200px;
         background: #222;
@@ -17,6 +26,7 @@
         align-items: center;
         justify-content: center;
       }
+
       .video_carousel .videoItem img{
         display: block;
         max-height: 100%;
@@ -24,6 +34,11 @@
     </style>
   </head>
   <body>
+    <a href="/">
+      Home
+    </a>
+    <br>
+    <input id="address" type="text" value="0xdF7EacFfb8F1C5F65CDD7d045A608DeBa980d473">
     <button onClick="getDataFromDBProvider()">Fetch videos and init carousel</button>
     <div class="video_carousel">
 
@@ -50,23 +65,31 @@
     })
 
     async function getDataFromDBProvider(){
-      videos = await paratii.vids.search({owner: "0xdF7EacFfb8F1C5F65CDD7d045A608DeBa980d473"})
+      var address = document.getElementById("address").value
+      videos = await paratii.vids.search({owner: address})
       initCarousel()
     }
 
     function initCarousel(){
       var videoCarousel = document.getElementsByClassName("video_carousel")[0]
+      // Just check if Flickity it's already initialized
       if(isFlickity){
+        //If initialized destroy it and empty videoCarousel
         flickity.destroy();
         videoCarousel.innerHTML = ''
       }
+
       isFlickity = false
       for(i = 0; i<videos.length; i++){
         var video = videos[i]
-        var videoItem = document.createElement("DIV")
-        videoItem.className = "videoItem"
+        var videoItem = document.createElement("a")
+        videoItem.className = "videoItem venobox"
+        videoItem.setAttribute("data-vbtype", "iframe")
+
+        // TODO change this as soon _id will be replace by id
+        videoItem.setAttribute("href", "http://portal.paratii.video/embed/"+video._id+"?autoplay=1")
         var thumb = document.createElement("IMG")
-        console.log(video.thumbnails[0])
+        console.log(video)
         if(video.thumbnails[0]){
           thumb.src = "https://gateway.paratii.video/ipfs/"+video.ipfsHash+"/"+video.thumbnails[0]
         } else {
@@ -75,12 +98,17 @@
         videoItem.appendChild(thumb)
         videoCarousel.appendChild(videoItem)
       }
+
+      // inizialize Flickity
       flickity = new Flickity( videoCarousel, {
         // options
         cellAlign: 'left',
         lazyLoad: 1
       });
+
       isFlickity = true
+      $('.venobox').venobox();
+
     }
     </script>
   </body>

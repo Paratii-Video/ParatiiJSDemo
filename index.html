@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <script type="text/javascript" src="/node_modules/paratii-js/dist/paratii.min.js"></script>
-  </head>
-  <body>
-    <a href="/upload">
-      Upload & Playback samples
-    </a>
-    <a href="/feed">
-      User Feed Carousel & Playback samples
-    </a>
-    <a href="/contracts">
-      Play with contracts
-    </a>
-    <a href="/transcoderevents">
-      Play with transcoder events
-    </a>
 
-    <script>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script type="text/javascript" src="/node_modules/paratii-js/dist/paratii.min.js"></script>
+</head>
+
+<body>
+  <ul>
+    <li>
+      <a href="/upload">
+        Upload & Gateway Playback sample
+      </a>
+    </li>
+    <li>
+      <a href="/feed">
+        User Feed Carousel (Flickity) & Lightbox Playback (Venobox) sample
+      </a>
+    </li>
+    <li>
+      <a href="/contracts">
+        Play with contracts
+      </a>
+    </li>
+    <li>
+      <a href="/transcoderevents">
+        Play with transcoder events
+      </a>
+    </li>
+  </ul>
+  <script>
     var paratii = new paratiijs.Paratii({
       account: {
         address: '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275',
@@ -34,10 +45,11 @@
       }
     })
     var video = paratii.vids.get("pm2bRPEQ48EX")
-    video.then(function(res){
+    video.then(function(res) {
       console.log(res)
     })
-    </script>
+  </script>
 
-  </body>
+</body>
+
 </html>
