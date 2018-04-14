@@ -5,12 +5,35 @@
     <title></title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <script type="text/javascript" src="/node_modules/paratii-js/dist/paratii.min.js"></script>
+    <script type="text/javascript" src="/node_modules/flickity/dist/flickity.pkgd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/node_modules/flickity/dist/flickity.min.css">
+    <style media="screen">
+      .video_carousel .videoItem{
+        width: 30%; /* full width */
+        height: 200px;
+        background: #222;
+        /* center images in cells with flexbox */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .video_carousel .videoItem img{
+        display: block;
+        max-height: 100%;
+      }
+    </style>
   </head>
   <body>
     <button onClick="getDataFromDBProvider()">Fetch videos and init carousel</button>
+    <div class="video_carousel">
+
+    </ul>
+
     <script>
 
     var videos
+    var flickity
+    var isFlickity;
 
     var paratii = new paratiijs.Paratii({
       account: {
@@ -28,6 +51,36 @@
 
     async function getDataFromDBProvider(){
       videos = await paratii.vids.search({owner: "0xdF7EacFfb8F1C5F65CDD7d045A608DeBa980d473"})
+      initCarousel()
+    }
+
+    function initCarousel(){
+      var videoCarousel = document.getElementsByClassName("video_carousel")[0]
+      if(isFlickity){
+        flickity.destroy();
+        videoCarousel.innerHTML = ''
+      }
+      isFlickity = false
+      for(i = 0; i<videos.length; i++){
+        var video = videos[i]
+        var videoItem = document.createElement("DIV")
+        videoItem.className = "videoItem"
+        var thumb = document.createElement("IMG")
+        console.log(video.thumbnails[0])
+        if(video.thumbnails[0]){
+          thumb.src = "https://gateway.paratii.video/ipfs/"+video.ipfsHash+"/"+video.thumbnails[0]
+        } else {
+          thumb.src = "/static/img/paratii-src.png"
+        }
+        videoItem.appendChild(thumb)
+        videoCarousel.appendChild(videoItem)
+      }
+      flickity = new Flickity( videoCarousel, {
+        // options
+        cellAlign: 'left',
+        lazyLoad: 1
+      });
+      isFlickity = true
     }
     </script>
   </body>
